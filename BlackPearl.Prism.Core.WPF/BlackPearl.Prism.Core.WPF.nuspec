@@ -18,8 +18,7 @@
     </dependencies>
     <references>
       <group targetFramework="net461">
-        <reference file="BlackPearl.Prism.Common.dll"/>
-        <reference file="BlackPearl.Prism.Core.dll"/>
+        <reference file="BlackPearl.Prism.Core.WPF.dll"/>
       </group>
     </references>
   </metadata>
