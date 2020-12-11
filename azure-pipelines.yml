@@ -39,17 +39,9 @@ steps:
     command: 'pack'
     packagesToPack: '**/*.nuspec'
     versioningScheme: 'off'
-
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-    nuGetFeedType: 'internal'
-    publishVstsFeed: 'f429f725-df5b-4bf6-910c-52061622b445/7e0a4089-f007-4917-aedd-7d5943ed9632'
-
 - task: NuGetCommand@2
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-    nuGetFeedType: 'internal'
-    publishVstsFeed: 'f429f725-df5b-4bf6-910c-52061622b445/7e0a4089-f007-4917-aedd-7d5943ed9632'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'NuGet_Org'
