@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>BlackPearl.Prism.Core.WPF</id>
+    <version>1.0.0.0</version>
+    <title>BlackPearl.Prism.Core.WPF</title>
+    <authors>nilayjoshi89</authors>
+    <owners>nilayjoshi89</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/nilayjoshi89/BlackPearl.Prism.Core</projectUrl>
+    <description>Prism Core Library WPF</description>
+    <releaseNotes>Prism Core Library WPF</releaseNotes>
+    <copyright>Copyright 2020</copyright>
+    <tags>BlackPearl WPF Prism</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework4.6.1" />
+    </dependencies>
+    <references>
+      <group targetFramework="net461">
+        <reference file="BlackPearl.Prism.Common.dll"/>
+        <reference file="BlackPearl.Prism.Core.dll"/>
+      </group>
+    </references>
+  </metadata>
+  <files>
+    <file src="bin\Release\BlackPearl.Prism.Core.WPF.dll" target="lib\net461" />
+    <file src="bin\Release\BlackPearl.Prism.Core.WPF.dll" target="ref\net461" />
+  </files>
+</package>
