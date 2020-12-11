@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>BlackPearl Prism Core</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/nilayjoshi89/BlackPearl.Prism.Core</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/nilayjoshi89/BlackPearl.Prism.Core</RepositoryUrl>
+    <PackageTags>BlackPearl Prism WPF Library</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
