@@ -33,6 +33,15 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: 'f429f725-df5b-4bf6-910c-52061622b445/7e0a4089-f007-4917-aedd-7d5943ed9632'
+- task: NuGetAuthenticate@0
+  inputs:
+    nuGetServiceConnections: 'NuGet_Org'
 
 - task: NuGetCommand@2
   inputs:
