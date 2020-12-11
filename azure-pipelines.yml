@@ -34,10 +34,6 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: NuGetAuthenticate@0
-  inputs:
-    nuGetServiceConnections: 'NuGet_Org'
-
 - task: NuGetCommand@2
   inputs:
     command: 'pack'
