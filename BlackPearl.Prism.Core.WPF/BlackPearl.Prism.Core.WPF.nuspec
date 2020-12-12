@@ -9,6 +9,7 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/nilayjoshi89/BlackPearl.Prism.Core</projectUrl>
+    <icon>Icon\Logo.png</icon>
     <description>Prism Core Library WPF</description>
     <releaseNotes>Prism Core Library WPF</releaseNotes>
     <copyright>Copyright 2020</copyright>
