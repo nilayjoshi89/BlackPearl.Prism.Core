@@ -84,10 +84,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\BlackPearl.Prism.Core\Icon\Logo.png">
-      <Link>Icon\Logo.png</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Include="Icon\Logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
