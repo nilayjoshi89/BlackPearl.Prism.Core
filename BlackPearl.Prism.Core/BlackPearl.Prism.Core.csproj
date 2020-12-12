@@ -1,16 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>BlackPearl Prism Core</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/nilayjoshi89/BlackPearl.Prism.Core</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/nilayjoshi89/BlackPearl.Prism.Core</RepositoryUrl>
-    <PackageTags>BlackPearl Prism WPF Library</PackageTags>
-    <PackageIcon>Logo.png</PackageIcon>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Prism.Core" Version="8.0.0.1909" />
     <PackageReference Include="Quartz" Version="3.2.3" />
@@ -18,18 +9,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlackPearl.Prism.Common\BlackPearl.Prism.Common.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Icon\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Icon\Logo.png">
+    <Content Include="Icon\Logo.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
-    </None>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlackPearl.Prism.Common\BlackPearl.Prism.Common.csproj" />
   </ItemGroup>
 
 </Project>
