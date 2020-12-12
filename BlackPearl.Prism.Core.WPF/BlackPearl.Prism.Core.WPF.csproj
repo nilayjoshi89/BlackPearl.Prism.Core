@@ -84,7 +84,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Icon\Logo.png" />
+    <Content Include="Icon\Logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
