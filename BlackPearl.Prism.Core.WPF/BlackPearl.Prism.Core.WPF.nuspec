@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>BlackPearl.Prism.Core.WPF</id>
-    <version>1.0.0.1</version>
+    <version>1.0.0.2</version>
     <title>BlackPearl.Prism.Core.WPF</title>
     <authors>nilayjoshi89</authors>
     <owners>nilayjoshi89</owners>
@@ -16,6 +16,8 @@
     <tags>BlackPearl WPF Prism</tags>
     <dependencies>
       <group targetFramework=".NETFramework4.6.1" />
+      <dependency id="Prism.Core" version="8.0.0.1909" />
+      <dependency id="Prism.Wpf" version="8.0.0.1909" />
     </dependencies>
     <references>
       <group targetFramework="net461">

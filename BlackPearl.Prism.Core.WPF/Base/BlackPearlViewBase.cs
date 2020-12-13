@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 
+using Prism.Mvvm;
+
 namespace BlackPearl.Prism.Core.WPF
 {
     public class BlackPearlViewBase : UserControl, IDisposable
@@ -13,6 +15,7 @@ namespace BlackPearl.Prism.Core.WPF
         #region Constructor
         public BlackPearlViewBase()
         {
+            SetValue(ViewModelLocator.AutoWireViewModelProperty, true);
             Loaded += BlackPearlViewBase_Loaded;
             Unloaded += BlackPearlViewBase_Unloaded;
         }

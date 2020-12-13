@@ -2,7 +2,7 @@
 <package >	
   <metadata>	
     <id>BlackPearl.Prism.Core</id>	
-    <version>1.0.0.1</version>	
+    <version>1.0.0.2</version>	
     <title>BlackPearl.Prism.Core</title>	
     <authors>nilayjoshi89</authors>	
     <owners>nilayjoshi89</owners>	
@@ -15,7 +15,10 @@
     <icon>images\Logo.png</icon>
     <tags>BlackPearl WPF Prism</tags>	
     <dependencies>	
-      <group targetFramework="netstandard2.0" />	
+      <group targetFramework="netstandard2.0" />
+      <dependency id="Prism.Core" version="8.0.0.1909" />
+      <dependency id="Quartz" version="3.2.3" />
+      <dependency id="Unity.Abstractions" version="5.11.6" />
     </dependencies>	
     <references>	
       <group targetFramework="Netstandard2.0">	
