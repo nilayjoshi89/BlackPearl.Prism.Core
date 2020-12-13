@@ -15,8 +15,11 @@
     <copyright>Copyright 2020</copyright>
     <tags>BlackPearl WPF Prism</tags>
     <dependencies>
-      <group targetFramework=".NETFramework4.6.1" />
       <group>
+        <dependency id="Prism.Core" version="8.0.0.1909" />
+        <dependency id="Prism.Wpf" version="8.0.0.1909" />
+      </group>
+      <group targetFramework=".NETFramework4.6.1">
         <dependency id="Prism.Core" version="8.0.0.1909" />
         <dependency id="Prism.Wpf" version="8.0.0.1909" />
       </group>
