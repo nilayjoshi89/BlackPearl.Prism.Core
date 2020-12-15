@@ -2,7 +2,7 @@
 <package >	
   <metadata>	
     <id>BlackPearl.Prism.Core</id>	
-    <version>1.0.0.2</version>	
+    <version>1.0.0.3</version>	
     <title>BlackPearl.Prism.Core</title>	
     <authors>nilayjoshi89</authors>	
     <owners>nilayjoshi89</owners>	
@@ -19,11 +19,13 @@
         <dependency id="Prism.Core" version="8.0.0.1909" />
         <dependency id="Quartz" version="3.2.3" />
         <dependency id="Unity.Abstractions" version="5.11.6" />
+        <dependency id="akavache.sqlite3" version="7.1.1" />
       </group>
       <group targetFramework="netstandard2.0">
         <dependency id="Prism.Core" version="8.0.0.1909" />
         <dependency id="Quartz" version="3.2.3" />
         <dependency id="Unity.Abstractions" version="5.11.6" />
+        <dependency id="akavache.sqlite3" version="7.1.1" />
       </group>
     </dependencies>	
     <references>	

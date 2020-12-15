@@ -1,4 +1,8 @@
 ﻿
+using System.Threading.Tasks;
+
+using BlackPearl.Prism.Common.Caching;
+using BlackPearl.Prism.Core.Caching;
 using BlackPearl.Prism.Core.Jobs;
 using BlackPearl.Prism.Jobs;
 
@@ -11,12 +15,17 @@ namespace BlackPearl.Prism.Core
 {
     public sealed class BlackPearlCoreModule : IModule
     {
-        public void OnInitialized(IContainerProvider containerProvider)
+        public async void OnInitialized(IContainerProvider containerProvider)
         {
             try
             {
-                var scheduler = containerProvider.Resolve<IBlackPearlScheduler>();
-                scheduler.Initialize();
+                IBlackPearlScheduler scheduler = containerProvider.Resolve<IBlackPearlScheduler>();
+                IBlackPearlCache cache = containerProvider.Resolve<IBlackPearlCache>();
+
+                Task scheduleTask = scheduler.Initialize();
+                Task cacheTask = cache.Initialize("BlackPearlCoreDataStore.db");
+
+                await Task.WhenAll(scheduleTask, cacheTask);
             }
             catch { }
         }
@@ -26,6 +35,7 @@ namespace BlackPearl.Prism.Core
             containerRegistry.Register<IJobFactory, BlackPearlJobFactory>();
             containerRegistry.Register<IJobDataMapper, IJobDataMapper>();
             containerRegistry.RegisterSingleton<IBlackPearlScheduler, BlackPearlScheduler>();
+            containerRegistry.RegisterSingleton<IBlackPearlCache, BlackPearlCache>();
         }
     }
 }

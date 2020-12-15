@@ -54,8 +54,11 @@ namespace BlackPearl.Prism.Core.WPF
                     // TODO: dispose managed state (managed objects)
                 }
 
-                Loaded -= BlackPearlViewBase_Loaded;
-                Unloaded -= BlackPearlViewBase_Unloaded;
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    Loaded -= BlackPearlViewBase_Loaded;
+                    Unloaded -= BlackPearlViewBase_Unloaded;
+                }), null);
 
                 // TODO: free unmanaged resources (unmanaged objects) and override finalizer
                 // TODO: set large fields to null
