@@ -24,6 +24,9 @@ namespace BlackPearl.Prism.Core.WPF
         #region Methods
         private void BlackPearlViewBase_Unloaded(object sender, RoutedEventArgs e)
         {
+            Loaded -= BlackPearlViewBase_Loaded;
+            Unloaded -= BlackPearlViewBase_Unloaded;
+
             if (!(sender is BlackPearlViewBase view)
                || !(view.DataContext is BlackPearlViewModelBase viewModel))
             {
@@ -34,6 +37,8 @@ namespace BlackPearl.Prism.Core.WPF
         }
         private void BlackPearlViewBase_Loaded(object sender, RoutedEventArgs e)
         {
+            Loaded -= BlackPearlViewBase_Loaded;
+
             if (!(sender is BlackPearlViewBase view)
                 || !(view.DataContext is BlackPearlViewModelBase viewModel))
             {
@@ -54,28 +59,13 @@ namespace BlackPearl.Prism.Core.WPF
                     // TODO: dispose managed state (managed objects)
                 }
 
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    Loaded -= BlackPearlViewBase_Loaded;
-                    Unloaded -= BlackPearlViewBase_Unloaded;
-                }), null);
-
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
                 disposedValue = true;
             }
-        }
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        ~BlackPearlViewBase()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: false);
         }
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
         #endregion
     }
