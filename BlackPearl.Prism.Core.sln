@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlackPearl.Prism.Common", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackPearl.Prism.Core.WPF", "BlackPearl.Prism.Core.WPF\BlackPearl.Prism.Core.WPF.csproj", "{216A26FD-76E3-4501-887B-4C0248B298AD}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlackPearl.Prism.Core.WPF.CodeGenerator", "BlackPearl.Prism.Core.WPF.CodeGenerator\BlackPearl.Prism.Core.WPF.CodeGenerator.csproj", "{475D1A44-C267-43B1-8EFF-6C685BF4B888}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlackPearl.Prism.Core.WPF.CodeGenerator.Tests", "BlackPearl.Prism.Core.WPF.CodeGenerator.Tests\BlackPearl.Prism.Core.WPF.CodeGenerator.Tests.csproj", "{05F1A494-AA21-44EF-8EE8-7F8000B8552A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{216A26FD-76E3-4501-887B-4C0248B298AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{216A26FD-76E3-4501-887B-4C0248B298AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{216A26FD-76E3-4501-887B-4C0248B298AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{475D1A44-C267-43B1-8EFF-6C685BF4B888}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{475D1A44-C267-43B1-8EFF-6C685BF4B888}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{475D1A44-C267-43B1-8EFF-6C685BF4B888}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{475D1A44-C267-43B1-8EFF-6C685BF4B888}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05F1A494-AA21-44EF-8EE8-7F8000B8552A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05F1A494-AA21-44EF-8EE8-7F8000B8552A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05F1A494-AA21-44EF-8EE8-7F8000B8552A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05F1A494-AA21-44EF-8EE8-7F8000B8552A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
