@@ -33,7 +33,7 @@ namespace BlackPearl.Prism.Core
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.Register<IJobFactory, BlackPearlJobFactory>();
-            containerRegistry.Register<IJobDataMapper, IJobDataMapper>();
+            containerRegistry.Register<IJobDataMapper, JobDataMapper>();
             containerRegistry.RegisterSingleton<IBlackPearlScheduler, BlackPearlScheduler>();
             containerRegistry.RegisterSingleton<IBlackPearlCache, BlackPearlCache>();
         }

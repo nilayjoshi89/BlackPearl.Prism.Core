@@ -24,28 +24,35 @@ namespace BlackPearl.Prism.Core.WPF
         #region Methods
         private void BlackPearlViewBase_Unloaded(object sender, RoutedEventArgs e)
         {
-            Loaded -= BlackPearlViewBase_Loaded;
-            Unloaded -= BlackPearlViewBase_Unloaded;
-
-            if (!(sender is BlackPearlViewBase view)
-               || !(view.DataContext is BlackPearlViewModelBase viewModel))
+            try
             {
-                return;
-            }
+                Unloaded -= BlackPearlViewBase_Unloaded;
 
-            viewModel.UnloadCommandAction();
+                if (!(sender is BlackPearlViewBase view)
+                   || !(view.DataContext is BlackPearlViewModelBase viewModel))
+                {
+                    return;
+                }
+
+                viewModel.OnUnload(sender, e);
+            }
+            catch { }
         }
         private void BlackPearlViewBase_Loaded(object sender, RoutedEventArgs e)
         {
-            Loaded -= BlackPearlViewBase_Loaded;
-
-            if (!(sender is BlackPearlViewBase view)
-                || !(view.DataContext is BlackPearlViewModelBase viewModel))
+            try
             {
-                return;
-            }
+                Loaded -= BlackPearlViewBase_Loaded;
 
-            viewModel.LoadCommandAction();
+                if (!(sender is BlackPearlViewBase view)
+                    || !(view.DataContext is BlackPearlViewModelBase viewModel))
+                {
+                    return;
+                }
+
+                viewModel.OnLoad(sender, e);
+            }
+            catch { }
         }
         #endregion
 
@@ -56,17 +63,14 @@ namespace BlackPearl.Prism.Core.WPF
             {
                 if (disposing)
                 {
-                    // TODO: dispose managed state (managed objects)
+                    Loaded -= BlackPearlViewBase_Loaded;
+                    Unloaded -= BlackPearlViewBase_Unloaded;
                 }
 
                 disposedValue = true;
             }
         }
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-        }
+        public void Dispose() => Dispose(disposing: true);
         #endregion
     }
 }

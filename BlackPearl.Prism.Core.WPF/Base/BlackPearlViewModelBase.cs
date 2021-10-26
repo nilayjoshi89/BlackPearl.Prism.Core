@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 using Prism.Mvvm;
 using Prism.Regions;
@@ -13,131 +15,88 @@ namespace BlackPearl.Prism.Core.WPF
     public abstract class BlackPearlViewModelBase : BindableBase, INotifyDataErrorInfo, INavigationAware, IRegionMemberLifetime, IDisposable
     {
         #region Members
-        private IEnumerable<string> propertiesToValidate = null;
-        private Dictionary<string, List<string>> propertyErrors = new Dictionary<string, List<string>>();
+        private ConcurrentDictionary<string, List<string>> propertyErrors = new ConcurrentDictionary<string, List<string>>();
         protected IRegionNavigationService navigationService;
-        private bool disposedValue;
+        private bool isDisposed;
         #endregion
 
         #region Constructor
         public BlackPearlViewModelBase()
         {
-            InitializePropertiesToValidate();
+            Initialize();
         }
-        #endregion
-
-        #region Properties
-        protected bool IsLoaded { get; private set; }
         #endregion
 
         #region Methods
-        public async void UnloadCommandAction()
-        {
-            await Task.Run(async () =>
-            {
-                try
-                {
-                    await UnloadAction();
-                }
-                catch { }
-            });
-        }
-        public async void LoadCommandAction()
-        {
-            await Task.Run(async () =>
-            {
-                try
-                {
-                    await LoadAction();
-                    IsLoaded = true;
-                }
-                catch { }
-            });
-        }
-        protected virtual Task LoadAction() => Task.CompletedTask;
-        protected virtual Task UnloadAction() => Task.CompletedTask;
-        protected virtual IEnumerable<string> GetValidationErrors(string propertyName) => null;
-        protected void ClearValidationError(string propertyName)
-        {
-            if (disposedValue)
-            {
-                return;
-            }
 
-            ClearErrorWithoutNotification(propertyName);
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
-        }
-        protected void ValidateProperty(string propertyName)
-        {
-            if (disposedValue || string.IsNullOrEmpty(propertyName))
-            {
-                return;
-            }
+        public Task OnLoad(object sender, RoutedEventArgs e) => Task.CompletedTask;
+        public Task OnUnload(object sender, RoutedEventArgs e) => Task.CompletedTask;
 
-            ClearErrorWithoutNotification(propertyName);
-            IEnumerable<string> errors = null;
-
-            try
-            {
-                errors = GetValidationErrors(propertyName);
-            }
-            catch { }
-
-            if (errors?.Any() != true)
-            {
-                return;
-            }
-
-            AddError(propertyName, errors);
-        }
-        protected void ValidateAllProperties()
-        {
-            if (disposedValue)
-            {
-                return;
-            }
-
-            foreach (string p in propertiesToValidate)
-            {
-                ValidateProperty(p);
-            }
-        }
-        protected virtual void Dispose()
-        {
-        }
         protected override void OnPropertyChanged(PropertyChangedEventArgs args)
         {
-            base.OnPropertyChanged(args);
-            ValidateProperty(args.PropertyName);
-        }
-        private void AddError(string propertyName, IEnumerable<string> errors)
-        {
-            if (!propertyErrors.ContainsKey(propertyName))
+            if (isDisposed)
             {
-                propertyErrors.Add(propertyName, new List<string>());
+                return;
             }
 
-            List<string> currentErrorList = propertyErrors[propertyName];
-            IEnumerable<string> uniqueErrors = errors.Where(e => !currentErrorList.Contains(e));
-            currentErrorList.AddRange(uniqueErrors);
+            base.OnPropertyChanged(args);
+            ValidatePropertyInternal(args?.PropertyName);
+        }
 
+        protected void ClearValidationError(string propertyName)
+        {
+            if (isDisposed)
+            {
+                return;
+            }
+
+            ClearValidationErrorWithoutNotification(propertyName);
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
-        private void ClearErrorWithoutNotification(string propertyName)
+        protected void ClearValidationErrorWithoutNotification(string propertyName)
         {
-            if (!propertyErrors.ContainsKey(propertyName))
+            if (isDisposed || !propertyErrors.ContainsKey(propertyName))
             {
                 return;
             }
 
             propertyErrors[propertyName]?.Clear();
         }
-        private void InitializePropertiesToValidate()
+
+        protected virtual void Initialize() { }
+        protected virtual IEnumerable<string> ValidateProperty(string propertyName) { yield break; }
+        protected virtual void Dispose() { }
+
+        private void AddError(string propertyName, IEnumerable<string> errors)
         {
-            propertiesToValidate = GetType()
-                                    .GetProperties()
-                                    .Where(p => p.Name != nameof(HasErrors))
-                                    .Select(p => p.Name);
+            propertyErrors.AddOrUpdate(propertyName, new List<string>(errors), (k, v) => UpdateConcurrentDictionaryFactory(k, v, errors));
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+        private void ValidatePropertyInternal(string propertyName)
+        {
+            try
+            {
+                if (isDisposed || string.IsNullOrEmpty(propertyName))
+                {
+                    return;
+                }
+
+                ClearValidationErrorWithoutNotification(propertyName);
+                IEnumerable<string> errors = ValidateProperty(propertyName);
+
+                if (errors?.Any() != true)
+                {
+                    return;
+                }
+
+                AddError(propertyName, errors);
+            }
+            catch { }
+        }
+        private static List<string> UpdateConcurrentDictionaryFactory(string key, List<string> existingList, IEnumerable<string> newValues)
+        {
+            existingList.AddRange(newValues);
+            return existingList.Distinct().ToList();
         }
         #endregion
 
@@ -146,49 +105,34 @@ namespace BlackPearl.Prism.Core.WPF
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
         public IEnumerable GetErrors(string propertyName)
         {
-            if (disposedValue)
-            {
-                return null;
-            }
-
-            return propertyErrors.ContainsKey(propertyName ?? string.Empty)
-                    ? propertyErrors[propertyName]
-                    : null;
+            return isDisposed
+                    ? null
+                    : (IEnumerable)(propertyErrors.ContainsKey(propertyName ?? string.Empty)
+                        ? propertyErrors[propertyName]
+                        : null);
         }
         #endregion
 
         #region INavigationAware
-        public virtual bool IsNavigationTarget(NavigationContext navigationContext)
-        {
-            if (disposedValue)
-            {
-                return false;
-            }
-
-            return true;
-        }
-        public virtual void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-
-        }
+        public virtual bool IsNavigationTarget(NavigationContext navigationContext) => !isDisposed;
+        public virtual void OnNavigatedFrom(NavigationContext navigationContext) { }
         public virtual void OnNavigatedTo(NavigationContext navigationContext) => navigationService = navigationContext.NavigationService;
         #endregion
 
         #region IDisposable
         private void DisposeObject(bool disposing)
         {
-            if (!disposedValue)
+            if (!isDisposed)
             {
                 if (disposing)
                 {
-                    propertiesToValidate = null;
                     propertyErrors?.Clear();
                     propertyErrors = null;
                     navigationService = null;
                     Dispose();
                 }
 
-                disposedValue = true;
+                isDisposed = true;
             }
         }
         void IDisposable.Dispose()
@@ -199,7 +143,7 @@ namespace BlackPearl.Prism.Core.WPF
         #endregion
 
         #region IRegionMemberLifetime
-        public virtual bool KeepAlive => false;
+        public virtual bool KeepAlive => true;
         #endregion
     }
 }

@@ -21,7 +21,14 @@ namespace BlackPearl.Prism.Core.WPF.Region
 
             foreach (object removedView in e.OldItems)
             {
-                MvvmHelpers.ViewAndViewModelAction<IDisposable>(removedView, d => d.Dispose());
+                MvvmHelpers.ViewAndViewModelAction<IDisposable>(removedView, d =>
+                {
+                    try
+                    {
+                        d.Dispose();
+                    }
+                    catch { }
+                });
             }
         }
     }
