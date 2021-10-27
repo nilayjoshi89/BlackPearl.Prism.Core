@@ -16,12 +16,16 @@ namespace BlackPearl.Prism.Core.WPF.CodeGenerator.Model
             this.viewModelClassSymbol = viewModelClassSymbol;
             CommandsToGenerate = new List<CommandToGenerate>();
             PropertiesToGenerate = new List<PropertyToGenerate>();
+            ComplexPropertiesToGenerate = new List<ComplexPropertyToGenerate>();
         }
 
         public ImmutableArray<ISymbol> Symbols => viewModelClassSymbol.GetMembers();
-
+        public string? Namespace => viewModelClassSymbol?.ContainingNamespace?.ToDisplayString();
+        public string? Name => viewModelClassSymbol?.Name;
+        public INamedTypeSymbol? BaseType => viewModelClassSymbol.BaseType;
         public IList<CommandToGenerate> CommandsToGenerate { get; }
 
         public IList<PropertyToGenerate> PropertiesToGenerate { get; }
+        public IList<ComplexPropertyToGenerate> ComplexPropertiesToGenerate { get; }
     }
 }

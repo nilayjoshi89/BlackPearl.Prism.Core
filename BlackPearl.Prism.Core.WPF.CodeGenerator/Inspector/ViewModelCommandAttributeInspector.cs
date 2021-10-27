@@ -94,5 +94,16 @@ namespace BlackPearl.Prism.Core.WPF.CodeGenerator.Inspectors
             MethodInfo? canExecuteMethodInfo = viewModelToGenerate.Symbols.OfType<IMethodSymbol>().FirstOrDefault(x => x.Name == canExecuteMethodName)?.GetMethodInfo();
             commandToProcess.CanExecuteMethod = canExecuteMethodInfo;
         }
+        public static void ProcessCommandInvalidate(this ViewModelToGenerate viewModelToGenerate)
+        {
+            IEnumerable<CommandToGenerate>? commandsWithInvalidationProperties = viewModelToGenerate.CommandsToGenerate.Where(x => x.CanExecuteAffectingProperties?.Any() == true);
+
+            foreach (PropertyToGenerate? propertyToGenerate in viewModelToGenerate.PropertiesToGenerate)
+            {
+                propertyToGenerate.CommandsToInvalidate = commandsWithInvalidationProperties
+                                                            .Where(x => x.CanExecuteAffectingProperties.Contains(propertyToGenerate.PropertyName))
+                                                            .ToList();
+            }
+        }
     }
 }

@@ -1,13 +1,16 @@
 ﻿
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
+using BlackPearl.Prism.Core.WPF.CodeGenerator.Extensions;
 using BlackPearl.Prism.Core.WPF.CodeGenerator.Inspectors;
 using BlackPearl.Prism.Core.WPF.CodeGenerator.Model;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 
 namespace BlackPearl.Prism.Core.WPF.CodeGenerator
 {
@@ -16,12 +19,45 @@ namespace BlackPearl.Prism.Core.WPF.CodeGenerator
     {
         public void Execute(GeneratorExecutionContext context)
         {
-            if (!(context.SyntaxReceiver is SyntaxReceiver generatorContext))
+            if (!(context.SyntaxContextReceiver is SyntaxReceiver generatorContext))
             {
                 return;
             }
 
-            context.AddSource("text.g.cs", "//Test Data");
+            INamedTypeSymbol? viewModelBaseSymbol = context.Compilation.GetTypeByMetadataName(typeof(BlackPearlViewModelBase).FullName);
+            if (viewModelBaseSymbol == null)
+            {
+                return;
+            }
+
+            foreach (ViewModelToGenerate? viewModelToGenerate in generatorContext.ViewModelsToGenerate)
+            {
+                var vmBuilder = new ViewModelDocumentBuilder();
+
+                vmBuilder.GenerateCommentHeader();
+
+                vmBuilder.GenerateUsingDirectives();
+
+                vmBuilder.GenerateNamespace(viewModelToGenerate.Namespace);
+
+                vmBuilder.GenerateClass(viewModelToGenerate, viewModelBaseSymbol);
+
+                vmBuilder.GenerateCommandInitializeMethod(viewModelToGenerate.CommandsToGenerate);
+
+                vmBuilder.GenerateCommandProperties(viewModelToGenerate.CommandsToGenerate);
+
+                vmBuilder.GenerateProperties(viewModelToGenerate.PropertiesToGenerate, viewModelToGenerate.ComplexPropertiesToGenerate);
+
+                vmBuilder.GeneratePropertyChangeHandlers(viewModelToGenerate.PropertiesToGenerate, viewModelToGenerate.ComplexPropertiesToGenerate);
+                
+                while (vmBuilder.DecreaseIndent())
+                {
+                    vmBuilder.AppendLine("}");
+                }
+
+                var sourceText = SourceText.From(vmBuilder.ToString(), Encoding.UTF8);
+                context.AddSource($"{viewModelToGenerate.Namespace}.{viewModelToGenerate.Name}.g.cs", sourceText);
+            }
         }
 
         public void Initialize(GeneratorInitializationContext context) => context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
@@ -46,9 +82,9 @@ namespace BlackPearl.Prism.Core.WPF.CodeGenerator
             {
                 return;
             }
+
             INamedTypeSymbol? viewModelClassSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclarationSyntax);
-            AttributeData? viewModelAttributeData = viewModelClassSymbol?.GetAttributes()
-                                                    .SingleOrDefault(x => x.AttributeClass?.ToDisplayString() == typeof(ViewModelAttribute).FullName);
+            AttributeData? viewModelAttributeData = viewModelClassSymbol?.GetAttributeData<ViewModelAttribute>().FirstOrDefault();
 
             if (viewModelClassSymbol == null || viewModelAttributeData == null)
             {
@@ -56,26 +92,9 @@ namespace BlackPearl.Prism.Core.WPF.CodeGenerator
             }
 
             var viewModelToGenerate = new ViewModelToGenerate(viewModelClassSymbol);
-
-            ViewModelMemberInspector.Inspect(viewModelToGenerate);
-
-            SetCommandsToInvalidatePropertyOnPropertiesToGenerate(viewModelToGenerate.PropertiesToGenerate, viewModelToGenerate.CommandsToGenerate);
+            ViewModelInspector.Inspect(viewModelToGenerate);
 
             ViewModelsToGenerate.Add(viewModelToGenerate);
-        }
-
-        private static void SetCommandsToInvalidatePropertyOnPropertiesToGenerate(
-            IEnumerable<PropertyToGenerate> propertiesToGenerate,
-            IEnumerable<CommandToGenerate> commandsToGenerate)
-        {
-            IEnumerable<CommandToGenerate>? commandsWithInvalidationProperties = commandsToGenerate.Where(x => x.CanExecuteAffectingProperties != null);
-
-            foreach (PropertyToGenerate? propertyToGenerate in propertiesToGenerate)
-            {
-                propertyToGenerate.CommandsToInvalidate = commandsWithInvalidationProperties
-                    .Where(x => x.CanExecuteAffectingProperties.Contains(propertyToGenerate.PropertyName))
-                    .ToList();
-            }
         }
     }
 }

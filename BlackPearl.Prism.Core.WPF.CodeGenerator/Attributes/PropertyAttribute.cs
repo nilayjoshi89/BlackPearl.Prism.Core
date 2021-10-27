@@ -15,10 +15,9 @@ namespace BlackPearl.Prism.Core.WPF.CodeGenerator
         /// </summary>
         /// <param name="propertyName">The name of the property to generate</param>
         /// /// <param name="generatePropertyChangeHandler">Generate property change handler method</param>
-        public PropertyAttribute(string propertyName, bool generatePropertyChangeHandler = false)
+        public PropertyAttribute(string propertyName)
         {
             PropertyName = propertyName;
-            GeneratePropertyChangeHandler = generatePropertyChangeHandler;
         }
 
         /// <summary>

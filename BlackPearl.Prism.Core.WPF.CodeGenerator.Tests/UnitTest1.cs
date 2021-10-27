@@ -40,4 +40,9 @@ namespace BlackPearl.Prism.Core.WPF.CodeGenerator.Tests
                 .Select(a => MetadataReference.CreateFromFile(a.Location))
                 .ToArray();
     }
+
+    public class SampleVMClass : BlackPearlViewModelBase
+    {
+
+    }
 }
