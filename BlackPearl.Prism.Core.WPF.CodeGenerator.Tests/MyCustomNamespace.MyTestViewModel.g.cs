@@ -28,15 +28,16 @@ namespace MyCustomNamespace
             get => _abc;
             set
             {
-                PropertyChangeArg<int> changeArgument = new PropertyChangeArg<int>(_abc, value);
-                if (_abc != value)
+                if (_abc == value)
                 {
-                    _abc = value;
-                    RaisePropertyChanged(nameof(ABC));
-                    RaisePropertyChanged("NewProperty");
-                    ABCCommand.RaiseCanExecuteChanged();
-                    OnABCChangedHandler(changeArgument);
+                    return;
                 }
+                PropertyChangeArg<int> changeArgument = new PropertyChangeArg<int>(_abc, value);
+                _abc = value;
+                RaisePropertyChanged(nameof(ABC));
+                RaisePropertyChanged("NewProperty");
+                ABCCommand.RaiseCanExecuteChanged();
+                OnABCChangedHandler(changeArgument);
             }
         }
 
@@ -45,12 +46,13 @@ namespace MyCustomNamespace
             get => unknown;
             set
             {
-                if (unknown != value)
+                if (unknown == value)
                 {
-                    unknown = value;
-                    RaisePropertyChanged(nameof(Unknown));
-                    ABCCommand.RaiseCanExecuteChanged();
+                    return;
                 }
+                unknown = value;
+                RaisePropertyChanged(nameof(Unknown));
+                ABCCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -59,13 +61,14 @@ namespace MyCustomNamespace
             get => model.FirstName;
             set
             {
-                PropertyChangeArg<string> changeArgument = new PropertyChangeArg<string>(model.FirstName, value);
-                if (model?.FirstName != value)
+                if (model?.FirstName == value)
                 {
-                    model.FirstName = value;
-                    RaisePropertyChanged(nameof(ModelFirstName));
-                    OnModelFirstNameChangedHandler(changeArgument);
+                    return;
                 }
+                PropertyChangeArg<string> changeArgument = new PropertyChangeArg<string>(model.FirstName, value);
+                model.FirstName = value;
+                RaisePropertyChanged(nameof(ModelFirstName));
+                OnModelFirstNameChangedHandler(changeArgument);
             }
         }
         #endregion Properties

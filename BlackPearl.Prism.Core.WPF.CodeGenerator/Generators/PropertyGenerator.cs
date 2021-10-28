@@ -53,13 +53,16 @@ namespace BlackPearl.Prism.Core.WPF.CodeGenerator
             vmBuilder.AppendLine("set");
             vmBuilder.AppendLine("{");
             vmBuilder.IncreaseIndent();
+            vmBuilder.AppendLine($"if ({p.BackingField} == value)");
+            vmBuilder.AppendLine("{");
+            vmBuilder.IncreaseIndent();
+            vmBuilder.AppendLine("return;");
+            vmBuilder.DecreaseIndent();
+            vmBuilder.AppendLine("}");
             if (p.MethodsToCall != null)
             {
                 vmBuilder.AppendLine($"PropertyChangeArg<{p.PropertyType}> changeArgument = new PropertyChangeArg<{p.PropertyType}>({p.BackingField}, value);");
             }
-            vmBuilder.AppendLine($"if ({p.BackingField} != value)");
-            vmBuilder.AppendLine("{");
-            vmBuilder.IncreaseIndent();
             vmBuilder.AppendLine($"{p.BackingField} = value;");
             vmBuilder.AppendLine($"RaisePropertyChanged(nameof({p.PropertyName}));");
             if (p.PropertiesToInvalidate != null)
@@ -80,8 +83,6 @@ namespace BlackPearl.Prism.Core.WPF.CodeGenerator
             {
                 vmBuilder.AppendLine($"{p.MethodsToCall.MethodName}(changeArgument);");
             }
-            vmBuilder.DecreaseIndent();
-            vmBuilder.AppendLine("}");
             vmBuilder.DecreaseIndent();
             vmBuilder.AppendLine("}");
             vmBuilder.DecreaseIndent();
@@ -120,21 +121,22 @@ namespace BlackPearl.Prism.Core.WPF.CodeGenerator
             vmBuilder.AppendLine("set");
             vmBuilder.AppendLine("{");
             vmBuilder.IncreaseIndent();
+            vmBuilder.AppendLine($"if ({p.BackingField}?.{p.Path} == value)");
+            vmBuilder.AppendLine("{");
+            vmBuilder.IncreaseIndent();
+            vmBuilder.AppendLine("return;");
+            vmBuilder.DecreaseIndent();
+            vmBuilder.AppendLine("}");
             if (p.MethodsToCall != null)
             {
                 vmBuilder.AppendLine($"PropertyChangeArg<{p.PropertyType}> changeArgument = new PropertyChangeArg<{p.PropertyType}>({p.BackingField}.{p.Path}, value);");
             }
-            vmBuilder.AppendLine($"if ({p.BackingField}?.{p.Path} != value)");
-            vmBuilder.AppendLine("{");
-            vmBuilder.IncreaseIndent();
             vmBuilder.AppendLine($"{p.BackingField}.{p.Path} = value;");
             vmBuilder.AppendLine($"RaisePropertyChanged(nameof({p.PropertyName}));");
             if (p.MethodsToCall != null)
             {
                 vmBuilder.AppendLine($"{p.MethodsToCall.MethodName}(changeArgument);");
             }
-            vmBuilder.DecreaseIndent();
-            vmBuilder.AppendLine("}");
             vmBuilder.DecreaseIndent();
             vmBuilder.AppendLine("}");
             vmBuilder.DecreaseIndent();
